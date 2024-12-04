@@ -8,22 +8,15 @@ void loop(){
 
 
 void avoid(int lvl){
- switch(lvl){
-  case 1:
+ switch(scout()){
+  case "small room":
    prevent();
-  case 2:
+  case "too close":
    halt();
-  case 3:
+  case "entered large room":
    reverse(); //already contains halt()
-  case 4:
+  case "large room":
    navigate();
 }}
 
-void detectAt(float d){
- if(d>=200){
-  return 1; }
- else if(d >= 10){
-  return 2; }
- else if(scout()=="Small room"){
-  return 3; }
- else 
+
