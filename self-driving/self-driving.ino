@@ -7,7 +7,7 @@
 #define TRIG_PIN A0 
 #define ECHO_PIN A1 
 #define MAX_DISTANCE 200 
-#define MAX_SPEED 190 // sets speed of DC  motors
+#define MAX_SPEED 190 
 #define MAX_SPEED_OFFSET 20
 
 NewPing sonar(TRIG_PIN, ECHO_PIN, MAX_DISTANCE); 
