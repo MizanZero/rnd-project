@@ -1,12 +1,12 @@
 // Setup Motor A (front and rear) pins
-int enableA = 1;
-int pinA1 = 3;
-int pinA2 = 2;
+int ENA = 1;
+int A1 = 3;
+int A2 = 2;
 
 // Setup Motor B (front and rear) pins
-int enableB = 6;
-int pinB1 = 5;
-int pinB2 = 4;
+int ENB = 6;
+int B1 = 5;
+int B2 = 4;
 
 // Setup Ultrasonic Sensor pins
 #define trigPin 8
