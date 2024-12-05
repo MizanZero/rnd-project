@@ -1,3 +1,7 @@
+String scout(){//returns the type of blockage
+ }
+
+
 void loop(){
 
  ir[]=checkIr();
@@ -30,6 +34,11 @@ int* checkIr(){
  rightIr=digitalRead(rightIrPin);
  ir[]={-1,frontIr,backIr,leftIr,rightIr}
 
+ for(int i=1; i<=4; i++){
+  if(ir[a]==1){
+   stop(); }//if end
+}//for end
+
  return ir;
 
 }//Ir function
@@ -43,12 +52,12 @@ void prevent(){
 
  if(srDist>=slDist){
   turn("sr");
-  delay(frontDist/speed);
+  delay(avdSep/speed);
   turn("sl");
   position=1 }
  else{
   turn("sl");
-  delay(frontDist/speed);
+  delay(avdSep/speed);
   turn("sr");
   position=-1; }
 
@@ -59,7 +68,13 @@ void prevent(){
 
     case -1: turn("right"); delay(avdSep/speed);
 	     turn("left"); }/*switch end*/ }//if end
-
+  else{}
 }//end of prevent function
 
 
+void halt(){
+ stop();
+ reverse();
+ delay(minDist/speed);
+ prevent();
+ 
