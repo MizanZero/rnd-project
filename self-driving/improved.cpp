@@ -67,7 +67,8 @@ void prevent(){
             turn("right");
 
     case -1: turn("right"); delay(avdSep/speed);
-	     turn("left"); }/*switch end*/ }//if end
+	     turn("left"); }/*switch end*/
+   }//if end
   else{}
 }//end of prevent function
 
@@ -75,6 +76,9 @@ void prevent(){
 void halt(){
  stop();
  reverse();
- delay(minDist/speed);
+
+ while(millis()-previousTime<=shortReverseTime){
+  checkIr(); }
+
+ stop();
  prevent();
- 
