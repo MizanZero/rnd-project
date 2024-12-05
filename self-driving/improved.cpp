@@ -35,7 +35,7 @@ int* checkIr(){
 }//Ir function
 
 
-void prevent();
+void prevent(){
  srv.write(slightLeft);
  slDist=ult.getDist();
  srv.write(slighRight)
@@ -44,10 +44,22 @@ void prevent();
  if(srDist>=slDist){
   turn("sr");
   delay(frontDist/speed);
-  turn("sl"); }
+  turn("sl");
+  position=1 }
  else{
   turn("sl");
   delay(frontDist/speed);
   turn("sr");
+  position=-1; }
+
+  if(passiveLookout()!=clear){
+   switch(position){
+    case 1: turn("left"); delay(avdSep/speed);
+            turn("right");
+
+    case -1: turn("right"); delay(avdSep/speed);
+	     turn("left"); }/*switch end*/ }//if end
+
+}//end of prevent function
 
 
