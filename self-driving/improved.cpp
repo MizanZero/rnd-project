@@ -14,16 +14,18 @@ void loop(){
 }
 
 
-void avoid(){
- switch(scout()){
+void avoid(String obstructType){
+ switch(obstructType){
   case "preventable":
    prevent();
   case "too close":
    halt();
   case "entered large room":
-   reverse(); //already contains halt()
+   reverse(); //already contains stop()
   case "realised large room":
    navigate();
+  case "small object":
+   blindNavigate();
 }//avoid function
 
 
@@ -76,9 +78,11 @@ void prevent(){
 void halt(){
  stop();
  reverse();
+ prevent(); }
 
- while(millis()-previousTime<=shortReverseTime){
-  checkIr(); }
-
- stop();
- prevent();
+void navigate(){
+ turn("rotateRight");
+ srv.write(LEFT);
+ forward();
+ while(getDist()>=)
+}
