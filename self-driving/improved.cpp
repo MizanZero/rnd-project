@@ -1,3 +1,7 @@
+bool timer(int startTime,int duration){}
+
+
+
 String scout(){//returns the type of blockage
  }
 
@@ -47,11 +51,11 @@ int* checkIr(){
 
 
 void prevent(String dir){
+ speed(MIN_SPEED);
  srv.write(slightLeft);
  slDist=ult.getDist();
  srv.write(slighRight)
  srDist=ult.getDist();
- if(srDist)
 
  if(srDist>=slDist){
   turn("sr");
@@ -83,28 +87,48 @@ void halt(){
 
 
 
-void blindNavigate(String dir,int round=1){
- if (round==2){
-  emergency();
+void navigate(String dir,
+              int round=1){
+
+ if (round>2){
+  emergency(); round=1;
   break;
  }
- int timeTaken=0;
  turn(dir);
- srv.write(dir);
- forward();
+ srv.write(oppDir); //opposite direction here
+ forward(); //medium speed
 
- while(wallInFront){
-  previousTime=millis();
+ while(wallInFront,
+       timer(startTime,WALL_SCAN_DURATION)){
+  startTime=millis();
+  endTime=millis();
+ }
 
-  while(dist>=MIN_DIST){
-   if(timer(CAR_LEN/speed)){
-    wallInFront=false; }
-   else if(checkIr()!=[-1,0,0,0,0]){
-    avoid();
-   else if(timer(WALL_TOO_LONG){
-    round++;
-    turn("rotateLeft");
-    blindNavigate("rotateLeft"); }
+
+ if(!timer(startTime,endTime)){
+  break;
+
+ else{
+  round=2; turn(oppDir); srv(dir);
+  forward(MAX_SPEED,
+          MIN_SPEED*(endTime-startTime))
+  navigate(oppDir);
  }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
