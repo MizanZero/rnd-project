@@ -81,7 +81,13 @@ void halt(){
  reverse();
  prevent(); }
 
-void navigate(String dir){
+
+
+void blindNavigate(String dir,int round=1){
+ if (round==2){
+  emergency();
+  break;
+ }
  int timeTaken=0;
  turn(dir);
  srv.write(dir);
@@ -96,7 +102,9 @@ void navigate(String dir){
    else if(checkIr()!=[-1,0,0,0,0]){
     avoid();
    else if(timer(WALL_TOO_LONG){
+    round++;
     turn("rotateLeft");
-    navigate("rotateLeft"); }
+    blindNavigate("rotateLeft"); }
  }
 }
+
