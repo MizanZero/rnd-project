@@ -46,11 +46,12 @@ int* checkIr(){
 }//Ir function
 
 
-void prevent(){
+void prevent(String dir){
  srv.write(slightLeft);
  slDist=ult.getDist();
  srv.write(slighRight)
  srDist=ult.getDist();
+ if(srDist)
 
  if(srDist>=slDist){
   turn("sr");
@@ -80,9 +81,22 @@ void halt(){
  reverse();
  prevent(); }
 
-void navigate(){
+void navigate(String dir){
+ int timeTaken=0;
  turn("rotateRight");
  srv.write(LEFT);
  forward();
- while(getDist()>=)
+
+ while(wallInFront){
+  previousTime=millis();
+
+  while(dist>=MIN_DIST){
+   if(timer(CAR_LEN/speed)){
+    wallInFront=false; }
+   else if(checkIr()!=[-1,0,0,0,0]){
+    avoid();
+   else if(timer(WALL_TOO_LONG){
+    turn("rotateLeft");
+    navigate("rotateLeft"); }
+ }
 }
