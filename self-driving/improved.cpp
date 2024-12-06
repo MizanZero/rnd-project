@@ -83,8 +83,8 @@ void halt(){
 
 void navigate(String dir){
  int timeTaken=0;
- turn("rotateRight");
- srv.write(LEFT);
+ turn(dir);
+ srv.write(dir);
  forward();
 
  while(wallInFront){
