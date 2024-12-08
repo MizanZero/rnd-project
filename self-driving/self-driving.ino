@@ -1,170 +1,164 @@
 
-
-#include <AFMotor.h>  
+#include <Servo.h>
 #include <NewPing.h>
-#include <Servo.h> 
+#include <AFMotor.h>
+#include <string.h>
 
-#define TRIG_PIN A0 
-#define ECHO_PIN A1 
-#define MAX_DISTANCE 200 
-#define MAX_SPEED 190 
-#define MAX_SPEED_OFFSET 20
+#include <C:/Users/Mizan/Documents/RnD Project/self-driving/movement.h>
 
-NewPing sonar(TRIG_PIN, ECHO_PIN, MAX_DISTANCE); 
+Servo srv;
 
-AF_DCMotor motor1(1, MOTOR12_1KHZ); 
-AF_DCMotor motor2(2, MOTOR12_1KHZ);
-AF_DCMotor motor3(3, MOTOR34_1KHZ);
-AF_DCMotor motor4(4, MOTOR34_1KHZ);
-Servo myservo;   
 
-boolean goesForward=false;
-int distance = 100;
-int speedSet = 0;
-
-void setup() {
-
-  myservo.attach(10);  
-  myservo.write(115); 
-  delay(2000);
-  distance = readPing();
-  delay(100);
-  distance = readPing();
-  delay(100);
-  distance = readPing();
-  delay(100);
-  distance = readPing();
-  delay(100);
-}
-
-void loop() {
- int distanceR = 0;
- int distanceL =  0;
- delay(40);
- 
- if(distance<=15)
- {
-  moveStop();
-  delay(100);
-  moveBackward();
-  delay(300);
-  moveStop();
-  delay(200);
-  distanceR = lookRight();
-  delay(200);
-  distanceL = lookLeft();
-  delay(200);
-
-  if(distanceR>=distanceL)
-  {
-    turnRight();
-    moveStop();
-  }else
-  {
-    turnLeft();
-    moveStop();
-  }
- }else
- {
-  moveForward();
+bool timerRunning(int startTime,int duration){
+ delay(10);
+ if(millis()-startTime<duration){
+  return true;
  }
- distance = readPing();
+ return false;
 }
 
-int lookRight()
-{
-    myservo.write(50); 
-    delay(500);
-    int distance = readPing();
-    delay(100);
-    myservo.write(115); 
-    return distance;
-}
-
-int lookLeft()
-{
-    myservo.write(170); 
-    delay(500);
-    int distance = readPing();
-    delay(100);
-    myservo.write(115); 
-    return distance;
-    delay(100);
-}
-
-int readPing() { 
-  delay(70);
-  int cm = sonar.ping_cm();
-  if(cm==0)
-  {
-    cm = 250;
+string scout(int distFront,bool ir=false){//returns the type of blockage
+ if(ir==false){
+  if(distFront>=PREVENTABLE_DISTANCE){
+   return "preventable"; 
   }
-  return cm;
-}
-
-void moveStop() {
-  motor1.run(RELEASE); 
-  motor2.run(RELEASE);
-  motor3.run(RELEASE);
-  motor4.run(RELEASE);
-  } 
-  
-void moveForward() {
-
- if(!goesForward)
-  {
-    goesForward=true;
-    motor1.run(FORWARD);      
-    motor2.run(FORWARD);
-    motor3.run(FORWARD); 
-    motor4.run(FORWARD);     
-   for (speedSet = 0; speedSet < MAX_SPEED; speedSet +=2) // slowly bring the speed up to avoid loading down the batteries too quickly
-   {
-    motor1.setSpeed(speedSet);
-    motor2.setSpeed(speedSet);
-    motor3.setSpeed(speedSet);
-    motor4.setSpeed(speedSet);
-    delay(5);
-   }
+  else if(distFront<=PREVENTABLE_DISTANCE && distFront>=LESS_PREVENTABLE_DISTANCE){
+   return "less preventable";
   }
-}
-
-void moveBackward() {
-    goesForward=false;
-    motor1.run(BACKWARD);      
-    motor2.run(BACKWARD);
-    motor3.run(BACKWARD);
-    motor4.run(BACKWARD);  
-  for (speedSet = 0; speedSet < MAX_SPEED; speedSet +=2) // slowly bring the speed up to avoid loading down the batteries too quickly
-  {
-    motor1.setSpeed(speedSet);
-    motor2.setSpeed(speedSet);
-    motor3.setSpeed(speedSet);
-    motor4.setSpeed(speedSet);
-    delay(5);
+  else if(distFront<=SAFE_DISTANCE){
+   return "too close";
   }
-}  
+  }
+ }
+ }
 
-void turnRight() {
-  motor1.run(FORWARD);
-  motor2.run(FORWARD);
-  motor3.run(BACKWARD);
-  motor4.run(BACKWARD);     
-  delay(500);
-  motor1.run(FORWARD);      
-  motor2.run(FORWARD);
-  motor3.run(FORWARD);
-  motor4.run(FORWARD);      
-} 
+
+void loop(){
+ delay(1000);
+ if(irClear()==false){
+  halt();  
+ }
+ distFront=ult.dist();
+ if(distFront<safeDist){
+  avoid(scout());
+ }
+ moveForward();
  
-void turnLeft() {
-  motor1.run(BACKWARD);     
-  motor2.run(BACKWARD);  
-  motor3.run(FORWARD);
-  motor4.run(FORWARD);   
-  delay(500);
-  motor1.run(FORWARD);     
-  motor2.run(FORWARD);
-  motor3.run(FORWARD);
-  motor4.run(FORWARD);
-}  
+}
+
+
+void avoid(string obstructType){
+ switch(obstructType){
+  case "preventable":
+   prevent();
+  case"less preventable":
+   slowPrevent();
+  case "too close":
+   halt();
+  case "entered large room":
+   reverse(); //already contains stop()
+  case "realised large room":
+   navigate();
+  case "small object":
+   blindNavigate();
+}//avoid function
+
+
+int* irClear(){
+ frontIr=digitalRead(frontIrPin);
+ backIr=digitalRead(backIrPin);
+ leftIr=digitalRead(leftIrPin);
+ rightIr=digitalRead(rightIrPin);
+ ir[]={-1,frontIr,backIr,leftIr,rightIr}
+
+ if(ir!={-1,0,0,0,0}){
+  return false;
+ }
+
+ return ir;
+
+}//Ir function
+
+
+void prevent(string dir){
+ speed(MIN_SPEED);
+ srv.write(slightLeft);
+ slDist=ult.getDist();
+ srv.write(slighRight)
+ srDist=ult.getDist();
+
+ if(srDist>=slDist){
+  turn("sr");
+  delay(avdSep/speed);
+  turn("sl");
+  position=1 }
+ else{
+  turn("sl");
+  delay(avdSep/speed);
+  turn("sr");
+  position=-1; }
+
+  if(passiveLookout()!=clear){
+   switch(position){
+    case 1: turn("left"); delay(avdSep/speed);
+            turn("right");
+
+    case -1: turn("right"); delay(avdSep/speed);
+	     turn("left"); }/*switch end*/
+   }//if end
+  else{}
+}//end of prevent function
+
+
+void halt(){
+ stop();
+ reverse();
+ prevent(); }
+
+
+
+void navigate(string dir,
+              int round=1){
+
+ if (round>2){
+  emergency(); round=1;
+  break;
+ }
+ turn(dir);
+ srv.write(oppDir); //opposite direction here
+ forward(); //medium speed
+
+ while(wallInFront,
+       timer(startTime,WALL_SCAN_DURATION)){
+  startTime=millis();
+  endTime=millis();
+ }
+
+
+ if(!timer(startTime,endTime)){
+  break;
+
+ else{
+  round=2; turn(oppDir); srv(dir);
+  forward(MAX_SPEED,
+          MIN_SPEED*(endTime-startTime))
+  navigate(oppDir);
+ }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
