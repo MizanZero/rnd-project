@@ -168,6 +168,15 @@ bool delayWithIR(int duration){
 }
 
 
+
+const int LANE_SWITCH_TIME;
+const int servo;
+const int flAngle;
+const int rlAngle;
+const int rlDist;
+const int flDist;
+
+
 void turn(string dir){
   switch(dir){
     case "left":
@@ -209,9 +218,9 @@ void loop(){
 
 
 void prevent(){
- digitalWrite(servo,flAngle); delay(300)
+ digitalWrite(servo,flAngle); delay(300) //fornt left
  flDist=dist();
- digitalWrite(servo,rlAngle);
+ digitalWrite(servo,rlAngle); //front left
  rlDist()=dist();
  if(flDist>=SEP_MIN && rlDist>=SEP_MIN){
   if(flDist>=rlDist){
