@@ -10,7 +10,6 @@ Servo srv;
 
 
 bool timerRunning(int startTime,int duration){
- delay(10);
  if(millis()-startTime<duration){
   return true;
  }
@@ -20,30 +19,42 @@ bool timerRunning(int startTime,int duration){
 string scout(int distFront,bool ir=false){//returns the type of blockage
  if(ir==false){
   if(distFront>=PREVENTABLE_DISTANCE){
-   return "preventable"; 
+   return "";
   }
   else if(distFront<=PREVENTABLE_DISTANCE && distFront>=LESS_PREVENTABLE_DISTANCE){
+   return "preventable";
+  }
+  else if(distFront<=PREVENTABLE_DISTANCE && distFront>=SAFE_DISTANCE){
    return "less preventable";
   }
   else if(distFront<=SAFE_DISTANCE){
    return "too close";
+  else if(){
+   return "entered large room";
+  }
+  else if(){
+   return "realised large room/large object";
+  }
+  else if(){
+   return "ir level object";
   }
   }
  }
+}
  }
 
 
 void loop(){
- delay(1000);
- if(irClear()==false){
-  halt();  
+ delay(50);
+ if(!irClear()){
+  halt();
  }
  distFront=ult.dist();
- if(distFront<safeDist){
+ if(distFront<IGNORABLE_DISTANCE){
   avoid(scout());
  }
  moveForward();
- 
+
 }
 
 
@@ -51,15 +62,15 @@ void avoid(string obstructType){
  switch(obstructType){
   case "preventable":
    prevent();
-  case"less preventable":
+  case "less preventable":
    slowPrevent();
   case "too close":
    halt();
   case "entered large room":
    reverse(); //already contains stop()
-  case "realised large room":
+  case "realised large room/large object":
    navigate();
-  case "small object":
+  case "ir level object":
    blindNavigate();
 }//avoid function
 
@@ -147,7 +158,14 @@ void navigate(string dir,
 }
 
 
-
+bool delayWithIR(int duration){
+ int startTime=millis();
+ while(timerRunning(startTume,duration)){
+  if (!irClear()){
+   halt();
+}
+}
+}
 
 
 
